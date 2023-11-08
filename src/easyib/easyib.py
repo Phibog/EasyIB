@@ -84,6 +84,13 @@ class REST:
 
         return response.json()
 
+    def get_pnl_partitioned(self) -> float:
+        response = requests.get(
+            f"{self.url}iserver/account/pnl/partitioned", verify=self.ssl
+        )
+
+        return response.json()
+
     def get_conid(
         self,
         symbol: str,
