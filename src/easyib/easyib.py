@@ -75,6 +75,15 @@ class REST:
 
         return response.json()["USD"]["netliquidationvalue"]
 
+    def get_ledger(self) -> float:
+        """Returns ledger of the selected account"""
+
+        response = requests.get(
+            f"{self.url}portfolio/{self.id}/ledger", verify=self.ssl
+        )
+
+        return response.json()
+
     def get_conid(
         self,
         symbol: str,
@@ -152,7 +161,7 @@ class REST:
         :rtype: dict
         """
 
-        max_page_index = 100 # To avoid infinite loop
+        max_page_index = 100  # To avoid infinite loop
         page_index = 0
         dic = {}
 
@@ -168,7 +177,8 @@ class REST:
             for item in response.json():
                 dic[item["contractDesc"]] = {
                     "position": item["position"],
-                    "conid": item["conid"]
+                    "mktValue": item["mktValue"],
+                    "conid": item["conid"],
                 }
 
             page_index += 1
@@ -189,6 +199,8 @@ class REST:
         response = requests.post(
             f"{self.url}iserver/reply/{id}", json=answer, verify=self.ssl
         )
+
+        print(response)
 
         return response.json()[0]
 
@@ -378,7 +390,6 @@ class REST:
 
 
 if __name__ == "__main__":
-
     api = REST()
 
     # print(api.reply_yes("a37bcc93-736b-441b-88a3-ee291d5dbcbd"))
